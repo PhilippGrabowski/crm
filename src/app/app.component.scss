@@ -1,0 +1,52 @@
+.mat-drawer-container {
+  height: 100vh;
+}
+
+.menu_icon {
+  cursor: pointer;
+}
+
+.sidenav {
+  width: 300px;
+}
+
+.logo_container {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  padding-inline: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+mat-toolbar,
+mat-toolbar-row {
+  min-height: 56px;
+  height: 56px;
+}
+
+.menu_items {
+  list-style: none;
+  margin-block: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 48px;
+    padding-inline: 16px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.router_container {
+  padding: 16px 56px;
+}
