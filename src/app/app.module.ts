@@ -15,6 +15,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { environment } from '../environments/environment';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 
 import { DashbordComponent } from './dashbord/dashbord.component';
 import { UserComponent } from './user/user.component';
@@ -42,6 +45,8 @@ import { DialogAddUserComponent } from './dialog-add-user/dialog-add-user.compon
     MatDatepickerModule,
     MatNativeDateModule,
     FormsModule,
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
   ],
   providers: [],
   bootstrap: [AppComponent],
