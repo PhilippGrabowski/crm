@@ -19,23 +19,22 @@ export class DialogAddUserComponent {
   private firestore: Firestore = inject(Firestore);
   user = new User();
   birthDate!: Date;
-  userNames: any;
+  userList: any;
 
   constructor() {}
 
   async saveUser() {
     this.user.birthDate = this.birthDate?.getTime();
-    // this.addUser(this.user);
+    this.addUser(this.user);
     // setDoc(doc(this.firestore, 'names', '#1'), {
     //   name: 'Philipp',
     // });
-    this.userNames = onSnapshot(
-      this.getUserDocRef('users', 'w8TujdRo5dsUJ8MAcyNM'),
-      (name) => {
-        console.log(name);
-      }
-    );
-    this.userNames();
+    // this.userList = onSnapshot(this.getUsersColRef(), (list) => {
+    //   list.forEach((user) => {
+    //     console.log(user);
+    //   });
+    // });
+    // this.userList();
   }
 
   async addUser(user: User) {
