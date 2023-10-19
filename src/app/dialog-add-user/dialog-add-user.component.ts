@@ -9,6 +9,7 @@ import {
   collectionData,
   onSnapshot,
 } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dialog-add-user',
@@ -19,14 +20,18 @@ export class DialogAddUserComponent {
   private firestore: Firestore = inject(Firestore);
   user = new User();
   birthDate!: Date;
-  userList: any;
+  // userList: any;
+  // users$!: Observable<any>;
 
-  constructor() {}
+  constructor() {
+    // const userProfileCollection = this.getUsersColRef();
+    // this.users$ = collectionData(userProfileCollection) as Observable<any>;
+  }
 
   async saveUser() {
     this.user.birthDate = this.birthDate?.getTime();
     this.addUser(this.user);
-    // setDoc(doc(this.firestore, 'names', '#1'), {
+    // setDoc(doc(this.firestore, 'users', 'user1'), {
     //   name: 'Philipp',
     // });
     // this.userList = onSnapshot(this.getUsersColRef(), (list) => {
@@ -35,6 +40,9 @@ export class DialogAddUserComponent {
     //   });
     // });
     // this.userList();
+    // const userProfileCollection = this.getUsersColRef();
+    // this.users$ = collectionData(userProfileCollection) as Observable<any>;
+    // this.users$.subscribe((user) => console.log(user));
   }
 
   async addUser(user: User) {
