@@ -1,4 +1,106 @@
-<p>user works!</p>
+<header>
+    <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Search" #input>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Show Data</mat-label>
+        <mat-select [formControl]="showData" multiple>
+            <mat-select-trigger>
+                {{showData.value?.[0] || ''}}
+                <span *ngIf="(showData.value?.length || 0) > 1" class="example-additional-selection">
+                    (+{{(showData.value?.length || 0) - 1}} {{showData.value?.length === 2 ? 'other' : 'others'}})
+                </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let data of showDataList" [value]="data" (click)="showColumns()">{{data}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</header>
+
+<mat-card>
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+                <!-- <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                </mat-checkbox> -->
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by lastName"> Last Name
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by firstName"> First Name
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef> Email </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef> Phone </th>
+            <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="birthDate">
+            <th mat-header-cell *matHeaderCellDef> Birth Date </th>
+            <td mat-cell *matCellDef="let element" class="dates"> {{element.birthDate}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="age">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by age"> Age
+            </th>
+            <td mat-cell *matCellDef="let element" class="dates"> {{element.age}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef> Address </th>
+            <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="zipCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by zipCode"> Zip Code
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.zipCode}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="city">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by city"> City </th>
+            <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="userData"></tr>
+        <tr mat-row *matRowDef="let row; columns: userData;" (click)="selection.toggle(row)">
+        </tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td [class.d-none]="!userExists" class="mat-cell table-info" colspan="4">No data matching the filter
+                "{{input.value}}"
+            </td>
+            <td [class.d-none]="userExists" class="mat-cell table-info" colspan="4">No data available</td>
+        </tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" aria-label="Select page of users"></mat-paginator>
+</mat-card>
+
+<div class="demo-button-container">
+    <button mat-raised-button [disabled]="!userExists" (click)="removeUser()" class="demo-button">
+        Remove user
+    </button>
+</div>
 
 <button class="add_user_btn" mat-fab color="primary" matTooltip="Add user" (click)="opendialog()">
     <mat-icon>person_add</mat-icon>

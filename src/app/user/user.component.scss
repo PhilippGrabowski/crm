@@ -1,5 +1,28 @@
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .add_user_btn {
   position: absolute;
   right: 56px;
   bottom: 56px;
+}
+
+.mdc-card {
+  margin-bottom: 20px;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  border-color: currentColor;
+}
+
+.table-info {
+  padding: 16px 0px 16px 56px;
 }

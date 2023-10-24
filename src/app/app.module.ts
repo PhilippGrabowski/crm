@@ -14,14 +14,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
+import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { DashbordComponent } from './dashbord/dashbord.component';
 import { UserComponent } from './user/user.component';
 import { DialogAddUserComponent } from './dialog-add-user/dialog-add-user.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -45,6 +52,14 @@ import { DialogAddUserComponent } from './dialog-add-user/dialog-add-user.compon
     MatDatepickerModule,
     MatNativeDateModule,
     FormsModule,
+    MatProgressBarModule,
+    MatCardModule,
+    MatTableModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatSortModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
   ],
