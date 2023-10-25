@@ -5,51 +5,64 @@ import {
   Firestore,
   collection,
   addDoc,
+  getDocs,
+  doc,
+  setDoc,
   updateDoc,
+  collectionData,
+  onSnapshot,
+  CollectionReference,
+  DocumentReference,
+  DocumentData,
+  docData,
 } from '@angular/fire/firestore';
 
 @Component({
-  selector: 'app-dialog-add-user',
-  templateUrl: './dialog-add-user.component.html',
-  styleUrls: ['./dialog-add-user.component.scss'],
+  selector: 'app-dialog-edit-contact',
+  templateUrl: './dialog-edit-contact.component.html',
+  styleUrls: ['./dialog-edit-contact.component.scss'],
 })
-export class DialogAddUserComponent {
+export class DialogEditContactComponent {
   private firestore: Firestore = inject(Firestore);
   userProfileCollection: any;
-  user = new User();
+  user!: User;
+  userID!: string;
   birthDate!: Date;
   loading = false;
   inputCheckIds = ['firstNameInput', 'lastNameInput', 'emailInput'];
-  allowToAddUser = false;
+  allowToAddUser = true;
 
-  constructor(public dialogRef: MatDialogRef<DialogAddUserComponent>) {
+  constructor(public dialogRef: MatDialogRef<DialogEditContactComponent>) {
     this.userProfileCollection = this.getUsersColRef();
   }
 
   /**
-   * The function saves a user if the condition allows, by setting the loading state to true, collecting user data, and adding the user
+   * The saveContact function checks if adding a user is allowed, and if so, sets the loading state to true,
+   * collects user data, and calls the editContact function
    */
-  async saveUser() {
+  async saveContact() {
     if (this.allowToAddUser) {
       this.loading = true;
       this.collectUserData();
-      this.addUser();
+      this.editContact();
     }
   }
 
   /**
-   * The function `addUser` adds a user to a user profile collection in a database and updates the user ID
+   * The `editContact` function updates the contact information of a user in a database and closes a dialog window
    */
-  async addUser() {
-    await addDoc(this.userProfileCollection, this.user.toJson())
-      .catch((err) => {
-        console.error(err);
-      })
-      .then((doc: any) => {
-        updateDoc(doc, { userID: doc.id });
-        this.loading = false;
-        this.dialogRef.close();
-      });
+  async editContact() {
+    const userRef = this.getUserDocRef('users', this.userID);
+    await updateDoc(userRef, {
+      firstName: this.user.firstName,
+      lastName: this.user.lastName,
+      email: this.user.email,
+      phone: this.user.phone,
+      birthDate: this.user.birthDate,
+      age: this.user.age,
+    });
+    this.loading = false;
+    this.dialogRef.close();
   }
 
   /**
@@ -80,15 +93,12 @@ export class DialogAddUserComponent {
   }
 
   /**
-   * The function collects user data, including age, birth date, phone number, address, zip code, city and sets default values if any of the fields are empty
+   * The function collects user data, including age, birth date, phone number and sets default values if any of the fields are empty
    */
   collectUserData() {
     this.user.age = this.calculateAge();
     this.user.birthDate = this.getTimestamp();
     this.user.phone = '' ? 'N/A' : this.user.phone;
-    this.user.address = '' ? 'N/A' : this.user.address;
-    this.user.zipCode = '' ? 'N/A' : this.user.zipCode;
-    this.user.city = '' ? 'N/A' : this.user.city;
   }
 
   /**
@@ -123,5 +133,15 @@ export class DialogAddUserComponent {
    */
   getUsersColRef() {
     return collection(this.firestore, 'users');
+  }
+
+  /**
+   * The function returns a document reference for a specific document in a Firestore collection
+   * @param {string} colId - The `colId` parameter is a string that represents the ID of the collection in Firestore
+   * @param {string} docId - The `docId` parameter is a string that represents the ID of a specific document within a collection
+   * @returns a document reference
+   */
+  getUserDocRef(colId: string, docId: string) {
+    return doc(collection(this.firestore, colId), docId);
   }
 }

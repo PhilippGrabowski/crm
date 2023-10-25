@@ -24,11 +24,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { DashbordComponent } from './dashbord/dashbord.component';
 import { UserComponent } from './user/user.component';
 import { DialogAddUserComponent } from './dialog-add-user/dialog-add-user.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { UserDetailComponent } from './user-detail/user-detail.component';
+import { DialogEditAddressComponent } from './dialog-edit-address/dialog-edit-address.component';
+import { DialogEditContactComponent } from './dialog-edit-contact/dialog-edit-contact.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +40,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     DashbordComponent,
     UserComponent,
     DialogAddUserComponent,
+    UserDetailComponent,
+    DialogEditAddressComponent,
+    DialogEditContactComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,6 +67,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatSortModule,
     MatCheckboxModule,
     MatPaginatorModule,
+    MatMenuModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
   ],

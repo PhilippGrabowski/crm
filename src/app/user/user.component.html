@@ -84,7 +84,8 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="userData"></tr>
-        <tr mat-row *matRowDef="let row; columns: userData;" (click)="selection.toggle(row)">
+        <tr mat-row *matRowDef="let row; columns: userData;" (click)="openUserDetails(row)"
+            [class.demo-row-is-clicked]="clickedRows.has(row)">
         </tr>
         <tr class="mat-row" *matNoDataRow>
             <td [class.d-none]="!userExists" class="mat-cell table-info" colspan="4">No data matching the filter
@@ -105,3 +106,6 @@
 <button class="add_user_btn" mat-fab color="primary" matTooltip="Add user" (click)="opendialog()">
     <mat-icon>person_add</mat-icon>
 </button>
+
+
+<!-- (click)="selection.toggle(row)" -->

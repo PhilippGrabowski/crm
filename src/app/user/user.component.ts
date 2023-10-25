@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
 import {
@@ -20,7 +21,6 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatSort, Sort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
-import { updateDoc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-user',
@@ -31,7 +31,6 @@ export class UserComponent implements OnInit {
   private firestore: Firestore = inject(Firestore);
   userProfileCollection: any;
   userData: string[] = ['select', 'lastName', 'firstName', 'email'];
-  users!: any;
   dataSource!: any;
   selection!: any;
   showData = new FormControl('');
@@ -40,18 +39,17 @@ export class UserComponent implements OnInit {
   columns = new FormControl('');
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  clickedRows = new Set<User>();
 
-  constructor(private _liveAnnouncer: LiveAnnouncer, public dialog: MatDialog) {
+  constructor(
+    private _liveAnnouncer: LiveAnnouncer,
+    private router: Router,
+    public dialog: MatDialog
+  ) {
     this.userProfileCollection = this.getUsersColRef();
   }
 
   ngOnInit() {
-    onSnapshot(this.userProfileCollection, (items: any) => {
-      items.forEach((item: any) => {
-        const userRef = this.getUserDocRef('users', item.id);
-        updateDoc(userRef, { userID: item.id });
-      });
-    });
     collectionData(this.userProfileCollection).subscribe(
       (changes) => (
         this.transformData(changes),
@@ -134,6 +132,13 @@ export class UserComponent implements OnInit {
     }`;
   }
 
+  openUserDetails(row: User) {
+    this.clickedRows.add(row);
+    this.clickedRows.forEach((row) => {
+      this.router.navigateByUrl('/user/' + row.userID);
+    });
+  }
+
   removeUser() {}
 
   checkExistingUsers(data: any[]) {
@@ -142,9 +147,5 @@ export class UserComponent implements OnInit {
 
   getUsersColRef() {
     return collection(this.firestore, 'users');
-  }
-
-  getUserDocRef(colId: string, docId: string) {
-    return doc(collection(this.firestore, colId), docId);
   }
 }

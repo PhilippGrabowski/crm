@@ -1,0 +1,12 @@
+.input_container {
+  display: flex;
+  gap: 12px;
+}
+
+h1 {
+  margin-bottom: 0;
+}
+
+.mdc-dialog__title + .mdc-dialog__content {
+  padding-block: 16px 0px;
+}

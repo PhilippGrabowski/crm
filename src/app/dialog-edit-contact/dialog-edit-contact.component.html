@@ -1,0 +1,50 @@
+<!--Progressbar-->
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<h1 mat-dialog-title>Edit contact</h1>
+
+<!--Dialog Content-->
+<div mat-dialog-content>
+    <div class="input_container">
+        <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input id="firstNameInput" [disabled]="loading" [(ngModel)]="user.firstName" (blur)="checkInputs()" required
+                matInput>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input id="lastNameInput" [disabled]="loading" [(ngModel)]="user.lastName" (blur)="checkInputs()" required
+                matInput>
+        </mat-form-field>
+    </div>
+    <mat-form-field class="full_width" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input id="emailInput" [disabled]="loading" [(ngModel)]="user.email" (blur)="checkInputs()" required matInput>
+    </mat-form-field>
+    <div class="input_container">
+        <mat-form-field appearance="outline">
+            <mat-label>Phone</mat-label>
+            <input [disabled]="loading" [(ngModel)]="user.phone" matInput>
+        </mat-form-field>
+        <mat-form-field id="birthdate-form-field" appearance="outline">
+            <mat-label>Birth Date</mat-label>
+            <input [disabled]="loading" [(ngModel)]="birthDate" matInput placeholder="DD/MM/JJJJ"
+                [matDatepicker]="datepicker">
+            <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+            <mat-datepicker #datepicker>
+                <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                </mat-datepicker-actions>
+            </mat-datepicker>
+        </mat-form-field>
+    </div>
+</div>
+
+<!--Dialog Buttons-->
+<div mat-dialog-actions>
+    <div> <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button [disabled]="!allowToAddUser" (click)="saveContact()" cdkFocusInitial>Save</button>
+    </div>
+    <span id="info">* is required</span>
+</div>

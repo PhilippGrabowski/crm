@@ -6,7 +6,7 @@ export class User {
   phone!: number | string;
   email!: string;
   address!: string;
-  zipCode!: string;
+  zipCode!: number | string;
   city!: string;
   userID!: string;
 
