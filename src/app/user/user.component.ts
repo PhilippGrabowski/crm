@@ -52,13 +52,13 @@ export class UserComponent implements OnInit {
    */
   ngOnInit() {
     collectionData(this.userProfileCollection).subscribe(
-      (changes) => (
-        this.transformData(changes),
-        (this.dataSource = new MatTableDataSource(changes)),
+      (data) => (
+        this.transformData(data),
+        (this.dataSource = new MatTableDataSource(data)),
         (this.selection = new SelectionModel(true, [])),
         (this.dataSource.sort = this.sort),
         (this.dataSource.paginator = this.paginator),
-        this.checkExistingUsers(changes)
+        this.checkExistingUsers(data)
       )
     );
   }
@@ -71,12 +71,28 @@ export class UserComponent implements OnInit {
   }
 
   /**
-   * The function "transformData" iterates over an array of data and calls the "transformDate" function for each element
-   * @param {any[]} data - The `data` parameter is an array of any type
+   * The function transforms data by setting default values for missing properties in each user object
+   * @param {any[]} data - The `data` parameter is an array of objects.
+   * Each object represents a user and contains properties such as `phone`, `age`, `address`, `zipCode`, and `city`
    */
   transformData(data: any[]) {
     data.forEach((user) => {
       this.transformDate(user);
+      if (!user.phone) {
+        user.phone = 'N/A';
+      }
+      if (!user.age) {
+        user.age = 'N/A';
+      }
+      if (!user.address) {
+        user.address = 'N/A';
+      }
+      if (!user.zipCode) {
+        user.zipCode = 'N/A';
+      }
+      if (!user.city) {
+        user.city = 'N/A';
+      }
     });
   }
 
@@ -86,13 +102,15 @@ export class UserComponent implements OnInit {
    * which is a string representing a date in the format "YYYY-MM-DD"
    */
   transformDate(user: any) {
-    if (user.birthDate && user.birthDate !== 'N/A') {
+    if (user.birthDate) {
       let timestamp = user.birthDate;
       user.birthDate = new Date(timestamp).toLocaleString('de-De', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
       });
+    } else {
+      user.birthDate = 'N/A';
     }
   }
 
@@ -141,12 +159,7 @@ export class UserComponent implements OnInit {
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    if (numSelected === numRows) {
-      return true;
-    } else {
-      return false;
-    }
-    // return numSelected === numRows;
+    return numSelected === numRows;
   }
 
   /**
@@ -167,7 +180,7 @@ export class UserComponent implements OnInit {
    * @param [row] - The `row` parameter is an optional object that contains a `position` property, which represents the position of a row in a table or list
    * @returns a string.
    */
-  checkboxLabel(row?: { position: number }): string {
+  checkboxLabel(row?: any): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }

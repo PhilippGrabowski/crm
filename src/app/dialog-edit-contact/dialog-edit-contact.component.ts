@@ -22,7 +22,10 @@ export class DialogEditContactComponent implements OnInit {
     this.userProfileCollection = this.getUsersColRef();
   }
   ngOnInit(): void {
-    this.birthDate = this.getBirthDate();
+    if (this.user.birthDate !== '') {
+      this.birthDate = this.getBirthDate();
+    }
+    console.log(this.birthDate);
   }
 
   /**
@@ -82,23 +85,22 @@ export class DialogEditContactComponent implements OnInit {
   }
 
   /**
-   * The function collects user data, including age, birth date, phone number and sets default values if any of the fields are empty
+   * The function collects user data, including age and birth date
    */
   collectUserData() {
     this.user.age = this.calculateAge();
     this.user.birthDate = this.getTimestamp();
-    this.user.phone = '' ? 'N/A' : this.user.phone;
   }
 
   /**
-   * The function returns the timestamp of a birth date if it exists, otherwise it returns 'N/A'
-   * @returns the timestamp of the birthDate if it is defined, otherwise it is returning the string 'N/A'
+   * The function returns the timestamp of a birth date if it exists, otherwise it returns ''
+   * @returns the timestamp of the birthDate if it is defined, otherwise it is returning the string ''
    */
   getTimestamp() {
-    if (this.birthDate !== undefined) {
+    if (this.birthDate !== undefined && this.birthDate !== null) {
       return this.birthDate?.getTime();
     } else {
-      return 'N/A';
+      return '';
     }
   }
 
@@ -113,15 +115,15 @@ export class DialogEditContactComponent implements OnInit {
 
   /**
    * The calculateAge function calculates the age based on the birth date provided
-   * @returns the age of a person based on their birth date. If the birth date is not defined, it returns 'N/A'
+   * @returns the age of a person based on their birth date. If the birth date is not defined, it returns ''
    */
   calculateAge() {
-    if (this.birthDate !== undefined) {
+    if (this.birthDate !== undefined && this.birthDate !== null) {
       var ageDifMs = Date.now() - this.birthDate.getTime();
       var ageDate = new Date(ageDifMs);
       return Math.abs(ageDate.getUTCFullYear() - 1970);
     } else {
-      return 'N/A';
+      return '';
     }
   }
 

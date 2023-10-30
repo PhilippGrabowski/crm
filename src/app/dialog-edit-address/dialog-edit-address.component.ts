@@ -24,17 +24,7 @@ export class DialogEditAddressComponent {
    */
   async saveAddress() {
     this.loading = true;
-    this.collectUserData();
     this.editAddress();
-  }
-
-  /**
-   * The function collects user data, including address, zip code and city, and sets default values if any of the fields are empty
-   */
-  collectUserData() {
-    this.user.address = '' ? 'N/A' : this.user.address;
-    this.user.zipCode = '' ? 'N/A' : this.user.zipCode;
-    this.user.city = '' ? 'N/A' : this.user.city;
   }
 
   /**

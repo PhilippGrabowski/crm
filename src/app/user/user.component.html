@@ -22,9 +22,9 @@
 
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
-                <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                    [checked]="readyToRemoveUser && isAllSelected()"
-                    [indeterminate]="readyToRemoveUser && !isAllSelected()" [aria-label]="checkboxLabel()">
+                <mat-checkbox (click)="checkToRemoveableUser()" (change)="$event ? toggleAllRows() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
                 </mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let row">
@@ -95,7 +95,7 @@
             <td [class.d-none]="userExists" class="mat-cell table-info" colspan="4">No data available</td>
         </tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" aria-label="Select page of users"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]"></mat-paginator>
 </mat-card>
 
 <div class="demo-button-container">
