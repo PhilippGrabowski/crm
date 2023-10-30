@@ -1,31 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { User } from 'src/models/user.class';
-import {
-  Firestore,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  setDoc,
-  updateDoc,
-  collectionData,
-  onSnapshot,
-  CollectionReference,
-  DocumentReference,
-  DocumentData,
-  docData,
-} from '@angular/fire/firestore';
+import { Firestore, collection, doc, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dialog-edit-contact',
   templateUrl: './dialog-edit-contact.component.html',
   styleUrls: ['./dialog-edit-contact.component.scss'],
 })
-export class DialogEditContactComponent {
+export class DialogEditContactComponent implements OnInit {
   private firestore: Firestore = inject(Firestore);
   userProfileCollection: any;
-  user!: User;
+  user: User = new User();
   userID!: string;
   birthDate!: Date;
   loading = false;
@@ -34,6 +20,9 @@ export class DialogEditContactComponent {
 
   constructor(public dialogRef: MatDialogRef<DialogEditContactComponent>) {
     this.userProfileCollection = this.getUsersColRef();
+  }
+  ngOnInit(): void {
+    this.birthDate = this.getBirthDate();
   }
 
   /**
@@ -111,6 +100,15 @@ export class DialogEditContactComponent {
     } else {
       return 'N/A';
     }
+  }
+
+  /**
+   * The function "getBirthDate" returns the birth date of a user as a Date object
+   * @returns the birth date of the user
+   */
+  getBirthDate() {
+    let date = new Date(this.user.birthDate);
+    return date;
   }
 
   /**

@@ -8,7 +8,7 @@
         <mat-select [formControl]="showData" multiple>
             <mat-select-trigger>
                 {{showData.value?.[0] || ''}}
-                <span *ngIf="(showData.value?.length || 0) > 1" class="example-additional-selection">
+                <span *ngIf="(showData.value?.length || 0) > 1">
                     (+{{(showData.value?.length || 0) - 1}} {{showData.value?.length === 2 ? 'other' : 'others'}})
                 </span>
             </mat-select-trigger>
@@ -22,14 +22,15 @@
 
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
-                <!-- <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                    [checked]="selection.hasValue() && isAllSelected()"
-                    [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                </mat-checkbox> -->
+                <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                    [checked]="readyToRemoveUser && isAllSelected()"
+                    [indeterminate]="readyToRemoveUser && !isAllSelected()" [aria-label]="checkboxLabel()">
+                </mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                    [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                <mat-checkbox (click)="$event.stopPropagation(); checkToRemoveableUser()"
+                    (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
+                    [aria-label]="checkboxLabel(row)">
                 </mat-checkbox>
             </td>
         </ng-container>
@@ -98,7 +99,7 @@
 </mat-card>
 
 <div class="demo-button-container">
-    <button mat-raised-button [disabled]="!userExists" (click)="removeUser()" class="demo-button">
+    <button mat-raised-button [disabled]="!readyToRemoveUser" (click)="removeUser()" class="demo-button">
         Remove user
     </button>
 </div>

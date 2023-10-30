@@ -5,14 +5,9 @@ import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.compo
 import {
   Firestore,
   collection,
-  addDoc,
-  getDocs,
   doc,
-  setDoc,
+  deleteDoc,
   collectionData,
-  onSnapshot,
-  CollectionReference,
-  DocumentData,
 } from '@angular/fire/firestore';
 import { User } from 'src/models/user.class';
 import { FormControl } from '@angular/forms';
@@ -33,6 +28,7 @@ export class UserComponent implements OnInit {
   userData: string[] = ['select', 'lastName', 'firstName', 'email'];
   dataSource!: any;
   selection!: any;
+  readyToRemoveUser = false;
   showData = new FormControl('');
   showDataList = ['phone', 'birthDate', 'age', 'address', 'zipCode', 'city'];
   userExists = false;
@@ -49,6 +45,11 @@ export class UserComponent implements OnInit {
     this.userProfileCollection = this.getUsersColRef();
   }
 
+  /**
+   * The ngOnInit function initializes the component by subscribing to changes in the
+   * userProfileCollection, transforming the data, setting up the MatTableDataSource and SelectionModel,
+   * sorting and paginating the data source, and checking for existing users
+   */
   ngOnInit() {
     collectionData(this.userProfileCollection).subscribe(
       (changes) => (
@@ -62,16 +63,28 @@ export class UserComponent implements OnInit {
     );
   }
 
+  /**
+   * The function "opendialog()" opens a dialog box to add a user
+   */
   opendialog() {
     this.dialog.open(DialogAddUserComponent);
   }
 
+  /**
+   * The function "transformData" iterates over an array of data and calls the "transformDate" function for each element
+   * @param {any[]} data - The `data` parameter is an array of any type
+   */
   transformData(data: any[]) {
     data.forEach((user) => {
       this.transformDate(user);
     });
   }
 
+  /**
+   * The function transforms a given user's birth date from a timestamp format to a localized date format
+   * @param {any} user - The "user" parameter is an object that represents a user. It is expected to have a "birthDate" property,
+   * which is a string representing a date in the format "YYYY-MM-DD"
+   */
   transformDate(user: any) {
     if (user.birthDate && user.birthDate !== 'N/A') {
       let timestamp = user.birthDate;
@@ -83,6 +96,9 @@ export class UserComponent implements OnInit {
     }
   }
 
+  /**
+   * The function "showColumns" updates the "userData" array by adding additional columns based on the values provided in the "showData" variable
+   */
   showColumns() {
     this.userData = ['select', 'lastName', 'firstName', 'email'];
     if (this.showData.value && this.showData.value.length > 0) {
@@ -93,6 +109,10 @@ export class UserComponent implements OnInit {
     }
   }
 
+  /**
+   * The function applies a filter to a data source based on the value of an input element and resets the paginator to the first page if available
+   * @param {Event} event - The event parameter is an object that represents the event that triggered the filter
+   */
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -101,6 +121,11 @@ export class UserComponent implements OnInit {
     }
   }
 
+  /**
+   * The function `announceSortChange` announces the current sorting state, either the direction of the sort or if the sorting has been cleared
+   * @param {Sort} sortState - Sort state is an object that contains information about the current sorting state
+   * It has a property called "direction" which represents the sorting direction (e.g. ascending or descending)
+   */
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
       this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
@@ -109,12 +134,26 @@ export class UserComponent implements OnInit {
     }
   }
 
+  /**
+   * The function checks if all items in a selection are selected
+   * @returns a boolean value. If the number of selected items is equal to the total number of rows, it returns true. Otherwise, it returns false.
+   */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    if (numSelected === numRows) {
+      return true;
+    } else {
+      return false;
+    }
+    // return numSelected === numRows;
   }
 
+  /**
+   * The function toggles the selection of all rows in a data source
+   * @returns If `this.isAllSelected()` returns `true`, then the function will clear the selection and return nothing. If `this.isAllSelected()` returns `false`,
+   * then the function will select all rows in the data source and return nothing
+   */
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -123,6 +162,11 @@ export class UserComponent implements OnInit {
     this.selection.select(...this.dataSource.data);
   }
 
+  /**
+   * The function returns a label for a checkbox based on the row position and selection status
+   * @param [row] - The `row` parameter is an optional object that contains a `position` property, which represents the position of a row in a table or list
+   * @returns a string.
+   */
   checkboxLabel(row?: { position: number }): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
@@ -132,6 +176,10 @@ export class UserComponent implements OnInit {
     }`;
   }
 
+  /**
+   * The function "openUserDetails" adds a user to a set of clicked rows and navigates to a user details page for each clicked row
+   * @param {User} row - The parameter "row" is of type "User", which represents a single user object
+   */
   openUserDetails(row: User) {
     this.clickedRows.add(row);
     this.clickedRows.forEach((row) => {
@@ -139,12 +187,41 @@ export class UserComponent implements OnInit {
     });
   }
 
-  removeUser() {}
+  /**
+   * The function checks if there are selected users and sets a flag indicating if they can be removed
+   */
+  checkToRemoveableUser() {
+    if (this.selection.selected.length > 0) {
+      this.readyToRemoveUser = true;
+    } else {
+      this.readyToRemoveUser = false;
+    }
+  }
 
+  /**
+   * The `removeUser` function removes selected users from the Firestore database
+   */
+  async removeUser() {
+    if (this.selection && this.selection.selected.length > 0) {
+      this.selection.selected.forEach(async (row: { userID: string }) => {
+        await deleteDoc(doc(this.firestore, 'users', row.userID));
+      });
+    }
+    this.readyToRemoveUser = false;
+  }
+
+  /**
+   * The function checks if there are existing users by checking the length of the data array
+   * @param {any[]} data - The parameter "data" is an array of any type of data
+   */
   checkExistingUsers(data: any[]) {
     this.userExists = data.length < 1 ? false : true;
   }
 
+  /**
+   * The function returns a reference to the "users" collection in Firestore
+   * @returns a reference to the "users" collection in Firestore
+   */
   getUsersColRef() {
     return collection(this.firestore, 'users');
   }

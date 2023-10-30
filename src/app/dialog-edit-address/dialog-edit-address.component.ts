@@ -11,7 +11,7 @@ import { Firestore, collection, doc, updateDoc } from '@angular/fire/firestore';
 export class DialogEditAddressComponent {
   private firestore: Firestore = inject(Firestore);
   userProfileCollection: any;
-  user!: User;
+  user: User = new User();
   userID!: string;
   loading = false;
 
