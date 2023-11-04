@@ -43,6 +43,8 @@ export class UserComponent implements OnInit {
     public dialog: MatDialog
   ) {
     this.userProfileCollection = this.getUsersColRef();
+    this.dataSource = new MatTableDataSource();
+    this.selection = new SelectionModel(true, []);
   }
 
   /**
@@ -55,7 +57,6 @@ export class UserComponent implements OnInit {
       (data) => (
         this.transformData(data),
         (this.dataSource = new MatTableDataSource(data)),
-        (this.selection = new SelectionModel(true, [])),
         (this.dataSource.sort = this.sort),
         (this.dataSource.paginator = this.paginator),
         this.checkExistingUsers(data)

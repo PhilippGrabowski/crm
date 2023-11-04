@@ -25,6 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
+import { HttpClientModule } from '@angular/common/http';
 
 import { DashbordComponent } from './dashbord/dashbord.component';
 import { UserComponent } from './user/user.component';
@@ -68,6 +69,7 @@ import { DialogEditContactComponent } from './dialog-edit-contact/dialog-edit-co
     MatCheckboxModule,
     MatPaginatorModule,
     MatMenuModule,
+    HttpClientModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
   ],

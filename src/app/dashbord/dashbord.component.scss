@@ -1,0 +1,327 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding-top: 40px;
+}
+
+.dashboard-greeting-container {
+  width: 100%;
+  display: flex;
+  gap: 30px;
+  align-items: center;
+
+  .greeting {
+    width: calc(100% - 325px);
+    text-align: center;
+    font-size: 48px;
+  }
+}
+
+#dashboard-weather {
+  width: fit-content;
+
+  mat-progress-bar {
+    transform: translateY(200px);
+    transition: all 0.6s ease;
+  }
+}
+
+.weather-container {
+  position: relative;
+  width: 400px;
+  height: 100px;
+  padding: 20px;
+  transform: translateY(165px);
+  transition: all 0.6s ease;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .weather-box {
+    text-align: center;
+    visibility: hidden;
+    overflow: hidden;
+
+    &.active {
+      visibility: visible;
+
+      .box {
+        transform: translateY(0%);
+        transition: transform 1s ease;
+        transition-delay: 0.6s;
+      }
+    }
+
+    .box {
+      transform: translateY(-100%);
+    }
+
+    img {
+      width: 60%;
+    }
+
+    .temperature {
+      position: relative;
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1;
+      margin-left: -30px;
+      transform: translateY(-20px);
+
+      span {
+        position: absolute;
+        font-size: 24px;
+        margin-left: 4px;
+      }
+    }
+
+    .description {
+      font-size: 24px;
+      font-weight: 500;
+      text-transform: capitalize;
+      transform: translateY(-20px);
+    }
+  }
+
+  .weather-details-container {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    padding-inline: 20px;
+    display: flex;
+    visibility: hidden;
+    overflow: hidden;
+
+    &.active {
+      visibility: visible;
+
+      .weather-details {
+        transform: translateY(0%);
+        transition: transform 1s ease;
+        transition-delay: 1.2s;
+      }
+    }
+
+    .weather-details {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50%;
+      transform: translateY(-100%);
+
+      mat-icon {
+        height: 56px;
+        font-size: 56px;
+        width: 56px;
+        margin-right: 10px;
+      }
+
+      span {
+        display: inline-block;
+        font-size: 22px;
+        font-weight: 500;
+      }
+
+      .text p {
+        font-size: 14px;
+        font-weight: 500;
+        margin: 0;
+      }
+    }
+  }
+
+  .not-found {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-top: 76px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    visibility: hidden;
+    overflow: hidden;
+
+    &.active {
+      visibility: visible;
+
+      .box {
+        transform: translateY(0%);
+        transition: transform 1s ease;
+        transition-delay: 0.6s;
+      }
+    }
+
+    .box {
+      text-align: center;
+      transform: translateY(-150%);
+
+      mat-icon {
+        width: 54px;
+        height: 54px;
+        font-size: 54px;
+        margin-bottom: 5px;
+      }
+
+      p {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.open {
+  transform: translateY(0%);
+}
+
+.clock-container {
+  width: fit-content;
+
+  .clock-wrapper {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 10px rgba(66, 66, 66, 0.15),
+      inset 5px 5px 10px rgba(66, 66, 66, 0.1),
+      inset 5px 5px 20px rgba(66, 66, 66, 0.1),
+      inset -5px -5px 45px rgba(66, 66, 66, 0.3);
+
+    .number-hours {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      color: #555399;
+
+      span {
+        position: absolute;
+        inset: 6px;
+        text-align: center;
+
+        p {
+          text-shadow: 0 0 10px #555399;
+        }
+      }
+    }
+
+    .hands-box {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .hand {
+        position: absolute;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+
+        i {
+          display: inline-block;
+          transform-origin: bottom;
+          border-radius: 50%;
+          box-shadow: 0 0 10px #555399;
+        }
+      }
+
+      .hours {
+        width: 140px;
+        height: 140px;
+
+        i {
+          width: 6px;
+          height: 70px;
+          background: #555399;
+        }
+      }
+
+      .minutes {
+        width: 200px;
+        height: 200px;
+
+        i {
+          width: 6px;
+          height: 100px;
+          background: #555399;
+        }
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          box-shadow: 0 0 5px #555399;
+          background: #555399;
+        }
+      }
+    }
+  }
+}
+
+.informations {
+  width: 100%;
+  display: flex;
+  gap: 75px;
+  justify-content: space-between;
+
+  .user-informations {
+    width: calc(100% - 430px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .user-age-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    .info-container {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+
+      mat-icon {
+        height: 46px;
+        width: 46px;
+        font-size: 46px;
+      }
+    }
+  }
+
+  .info-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+
+    span {
+      font-size: 20px;
+    }
+
+    span:last-of-type {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    mat-icon {
+      height: 54px;
+      width: 54px;
+      font-size: 54px;
+    }
+  }
+}

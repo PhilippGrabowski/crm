@@ -1,1 +1,105 @@
-<p>dashbord works!</p>
+<div class="dashboard">
+
+    <div class="dashboard-greeting-container">
+        <div class="clock-container">
+            <div class="clock-wrapper">
+                <div class="number-hours">
+                    <span *ngFor="let num of numbers" [ngStyle]="{'transform' : 'rotate('+num * 30+'deg)'}">
+                        <p [ngStyle]="{'transform' : 'rotate('+num * -30+'deg)'}">{{ num }}</p>
+                    </span>
+                </div>
+                <div class="hands-box">
+                    <div class="hand hours"><i></i></div>
+                    <div class="hand minutes"><i></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="greeting">
+            <span>{{ greeting }}</span>
+        </div>
+    </div>
+
+    <div class="informations">
+        <div id="dashboard-weather">
+            <mat-progress-bar *ngIf="loading" mode="indeterminate"
+                [class.open]="openWeatherContainer"></mat-progress-bar>
+            <mat-card class="weather-container" [class.open]="openWeatherContainer">
+                <form>
+                    <mat-form-field>
+                        <mat-label>Location</mat-label>
+                        <mat-icon matPrefix>place</mat-icon>
+                        <input type="text" matInput placeholder="Enter Your Location" [formControl]="location">
+                        <button matSuffix mat-icon-button (click)="getWeatherDetails()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </form>
+
+                <div class="weather-box" [class.active]="!hideWeatherDetails">
+                    <div class="box">
+                        <div class="info-weather">
+                            <div class="weather">
+                                <img src="../../assets/img/{{ imgList[imgIndex] }}" alt="">
+                                <p class="temperature">{{ temperature }}<span> &#8451;</span></p>
+                                <p class="description">{{ description}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weather-details-container" [class.active]="!hideWeatherDetails">
+                    <div class="weather-details">
+                        <mat-icon>water</mat-icon>
+                        <div class="text">
+                            <div class="info">
+                                <span>{{ humidity }}%</span>
+                            </div>
+                            <p>Humidity</p>
+                        </div>
+                    </div>
+                    <div class="weather-details">
+                        <mat-icon>air</mat-icon>
+                        <div class="text">
+                            <div class="info">
+                                <span>{{ windSpeed }}m/s</span>
+                            </div>
+                            <p>Wind Speed</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="not-found" [class.active]="!hideUnknownLocationMessage">
+                    <div class="box">
+                        <mat-icon color="warn">error</mat-icon>
+                        <p>Oops! The location could not be found.</p>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+
+        <div class="user-informations">
+            <mat-card class="info-container">
+                <mat-icon>group</mat-icon>
+                <span>The number of users is</span>
+                <span>{{ userAmount }}</span>
+            </mat-card>
+            <div class="user-age-container">
+                <mat-card class="info-container">
+                    <mat-icon>elderly</mat-icon>
+                    <span>The oldest users is</span>
+                    <span>{{ oldestAge }}</span>
+                </mat-card>
+                <mat-card class="info-container">
+                    <mat-icon>directions_walk</mat-icon>
+                    <span>The youngest users is</span>
+                    <span>{{ youngestAge }}</span>
+                </mat-card>
+            </div>
+            <mat-card class="info-container">
+                <mat-icon>map</mat-icon>
+                <span>Most users live in</span>
+                <span>{{ userLocation }}</span>
+            </mat-card>
+        </div>
+    </div>
+</div>
