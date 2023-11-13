@@ -1,11 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  Firestore,
-  collection,
-  doc,
-  onSnapshot,
-} from '@angular/fire/firestore';
+import { FirebaseService } from '../services/FirebaseService';
+import { onSnapshot } from '@angular/fire/firestore';
 import { User } from 'src/models/user.class';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogEditContactComponent } from '../dialog-edit-contact/dialog-edit-contact.component';
@@ -17,13 +13,12 @@ import { DialogEditAddressComponent } from '../dialog-edit-address/dialog-edit-a
   styleUrls: ['./user-detail.component.scss'],
 })
 export class UserDetailComponent implements OnInit {
-  private firestore: Firestore = inject(Firestore);
-  userProfileCollection: any;
+  firebaseService!: FirebaseService;
   userID!: string;
   user: User = new User();
 
   constructor(private route: ActivatedRoute, public dialog: MatDialog) {
-    this.userProfileCollection = this.getUsersColRef();
+    this.firebaseService = inject(FirebaseService);
   }
 
   /**
@@ -32,28 +27,10 @@ export class UserDetailComponent implements OnInit {
    */
   ngOnInit(): void {
     this.userID = this.route.snapshot.params['id'];
-    const userRef = this.getUserDocRef('users', this.userID);
+    const userRef = this.firebaseService.getUserDocRef(this.userID);
     onSnapshot(userRef, (doc) => {
       this.user = new User(doc.data());
     });
-  }
-
-  /**
-   * The function returns a reference to the "users" collection in Firestore
-   * @returns a reference to the "users" collection in Firestore
-   */
-  getUsersColRef() {
-    return collection(this.firestore, 'users');
-  }
-
-  /**
-   * The function returns a document reference for a specific document in a collection
-   * @param {string} colId - The `colId` parameter is a string that represents the ID of the collection in Firestore
-   * @param {string} docId - The `docId` parameter is a string that represents the ID of a specific document in a collection
-   * @returns a document reference
-   */
-  getUserDocRef(colId: string, docId: string) {
-    return doc(collection(this.firestore, colId), docId);
   }
 
   /**

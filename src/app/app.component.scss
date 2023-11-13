@@ -1,5 +1,7 @@
 .mat-drawer-container {
+  max-width: 1920px;
   height: 100vh;
+  margin-inline: auto;
 }
 
 .menu_icon {
@@ -12,6 +14,7 @@
 
 .logo_container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   min-height: 56px;
   padding-inline: 7px 16px;
@@ -54,4 +57,16 @@ mat-toolbar-row {
 
 .router_container {
   padding: 16px 56px;
+}
+
+@media (max-width: 1440px) {
+  .sidenav {
+    width: 200px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .sidenav {
+    width: 350px;
+  }
 }

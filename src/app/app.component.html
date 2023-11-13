@@ -1,5 +1,5 @@
-<mat-drawer-container class="mat-drawer-container" autosize>
-  <mat-drawer #drawer class="sidenav" mode="side" [opened]="true">
+<mat-drawer-container class="mat-drawer-container" autosize [hasBackdrop]="backdrop">
+  <mat-drawer #drawer class="sidenav" [mode]="backdrop? 'over' : 'side'" [opened]="sideNav">
     <div class="logo_container"><img src="../assets/img/logo.png" alt=""></div>
     <ul class="menu_items">
       <li routerLink="/dashboard"><mat-icon class="menu_icon">dashboard</mat-icon>Dashboard</li>

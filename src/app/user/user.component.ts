@@ -2,13 +2,8 @@ import { Component, OnInit, inject, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddUserComponent } from '../dialog-add-user/dialog-add-user.component';
-import {
-  Firestore,
-  collection,
-  doc,
-  deleteDoc,
-  collectionData,
-} from '@angular/fire/firestore';
+import { FirebaseService } from '../services/FirebaseService';
+import { collectionData } from '@angular/fire/firestore';
 import { User } from 'src/models/user.class';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,8 +18,7 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit {
-  private firestore: Firestore = inject(Firestore);
-  userProfileCollection: any;
+  firebaseService!: FirebaseService;
   userData: string[] = ['select', 'lastName', 'firstName', 'email'];
   dataSource!: any;
   selection!: any;
@@ -42,7 +36,7 @@ export class UserComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog
   ) {
-    this.userProfileCollection = this.getUsersColRef();
+    this.firebaseService = inject(FirebaseService);
     this.dataSource = new MatTableDataSource();
     this.selection = new SelectionModel(true, []);
   }
@@ -53,7 +47,7 @@ export class UserComponent implements OnInit {
    * sorting and paginating the data source, and checking for existing users
    */
   ngOnInit() {
-    collectionData(this.userProfileCollection).subscribe(
+    collectionData(this.firebaseService.userProfileCollection).subscribe(
       (data) => (
         this.transformData(data),
         (this.dataSource = new MatTableDataSource(data)),
@@ -218,10 +212,11 @@ export class UserComponent implements OnInit {
   async removeUser() {
     if (this.selection && this.selection.selected.length > 0) {
       this.selection.selected.forEach(async (row: { userID: string }) => {
-        await deleteDoc(doc(this.firestore, 'users', row.userID));
+        this.firebaseService.deleteUser(row.userID);
       });
     }
     this.readyToRemoveUser = false;
+    this.selection = new SelectionModel(true, []);
   }
 
   /**
@@ -230,13 +225,5 @@ export class UserComponent implements OnInit {
    */
   checkExistingUsers(data: any[]) {
     this.userExists = data.length < 1 ? false : true;
-  }
-
-  /**
-   * The function returns a reference to the "users" collection in Firestore
-   * @returns a reference to the "users" collection in Firestore
-   */
-  getUsersColRef() {
-    return collection(this.firestore, 'users');
   }
 }

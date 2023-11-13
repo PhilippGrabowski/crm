@@ -1,12 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { User } from 'src/models/user.class';
-import {
-  Firestore,
-  collection,
-  addDoc,
-  updateDoc,
-} from '@angular/fire/firestore';
+import { FirebaseService } from '../services/FirebaseService';
+import { addDoc, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dialog-add-user',
@@ -14,8 +10,7 @@ import {
   styleUrls: ['./dialog-add-user.component.scss'],
 })
 export class DialogAddUserComponent {
-  private firestore: Firestore = inject(Firestore);
-  userProfileCollection: any;
+  firebaseService!: FirebaseService;
   user = new User();
   birthDate!: Date;
   loading = false;
@@ -23,7 +18,7 @@ export class DialogAddUserComponent {
   allowToAddUser = false;
 
   constructor(public dialogRef: MatDialogRef<DialogAddUserComponent>) {
-    this.userProfileCollection = this.getUsersColRef();
+    this.firebaseService = inject(FirebaseService);
   }
 
   /**
@@ -41,7 +36,7 @@ export class DialogAddUserComponent {
    * The function `addUser` adds a user to a user profile collection in a database and updates the user ID
    */
   async addUser() {
-    await addDoc(this.userProfileCollection, this.user.toJson())
+    await addDoc(this.firebaseService.userProfileCollection, this.user.toJson())
       .catch((err) => {
         console.error(err);
       })
@@ -111,13 +106,5 @@ export class DialogAddUserComponent {
     } else {
       return '';
     }
-  }
-
-  /**
-   * The function returns a reference to the "users" collection in Firestore
-   * @returns a reference to the "users" collection in Firestore
-   */
-  getUsersColRef() {
-    return collection(this.firestore, 'users');
   }
 }

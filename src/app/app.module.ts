@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -34,6 +34,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { DialogEditAddressComponent } from './dialog-edit-address/dialog-edit-address.component';
 import { DialogEditContactComponent } from './dialog-edit-contact/dialog-edit-contact.component';
+import { FirebaseService } from './services/FirebaseService';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,13 @@ import { DialogEditContactComponent } from './dialog-edit-contact/dialog-edit-co
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
   ],
-  providers: [],
+  providers: [FirebaseService],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  private firebaseService!: FirebaseService;
+
+  constructor() {
+    this.firebaseService = inject(FirebaseService);
+  }
+}

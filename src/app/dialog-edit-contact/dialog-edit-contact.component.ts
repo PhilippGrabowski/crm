@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { User } from 'src/models/user.class';
-import { Firestore, collection, doc, updateDoc } from '@angular/fire/firestore';
+import { FirebaseService } from '../services/FirebaseService';
+import { updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dialog-edit-contact',
@@ -9,8 +10,7 @@ import { Firestore, collection, doc, updateDoc } from '@angular/fire/firestore';
   styleUrls: ['./dialog-edit-contact.component.scss'],
 })
 export class DialogEditContactComponent implements OnInit {
-  private firestore: Firestore = inject(Firestore);
-  userProfileCollection: any;
+  firebaseService!: FirebaseService;
   user: User = new User();
   userID!: string;
   birthDate!: Date;
@@ -19,13 +19,12 @@ export class DialogEditContactComponent implements OnInit {
   allowToAddUser = true;
 
   constructor(public dialogRef: MatDialogRef<DialogEditContactComponent>) {
-    this.userProfileCollection = this.getUsersColRef();
+    this.firebaseService = inject(FirebaseService);
   }
   ngOnInit(): void {
     if (this.user.birthDate !== '') {
       this.birthDate = this.getBirthDate();
     }
-    console.log(this.birthDate);
   }
 
   /**
@@ -44,7 +43,7 @@ export class DialogEditContactComponent implements OnInit {
    * The `editContact` function updates the contact information of a user in a database and closes a dialog window
    */
   async editContact() {
-    const userRef = this.getUserDocRef('users', this.userID);
+    const userRef = this.firebaseService.getUserDocRef(this.userID);
     await updateDoc(userRef, {
       firstName: this.user.firstName,
       lastName: this.user.lastName,
@@ -125,23 +124,5 @@ export class DialogEditContactComponent implements OnInit {
     } else {
       return '';
     }
-  }
-
-  /**
-   * The function returns a reference to the "users" collection in Firestore
-   * @returns a reference to the "users" collection in Firestore
-   */
-  getUsersColRef() {
-    return collection(this.firestore, 'users');
-  }
-
-  /**
-   * The function returns a document reference for a specific document in a Firestore collection
-   * @param {string} colId - The `colId` parameter is a string that represents the ID of the collection in Firestore
-   * @param {string} docId - The `docId` parameter is a string that represents the ID of a specific document within a collection
-   * @returns a document reference
-   */
-  getUserDocRef(colId: string, docId: string) {
-    return doc(collection(this.firestore, colId), docId);
   }
 }
