@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, HostListener } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ConfigService } from '../services/ConfigService';
 import { FirebaseService } from '../services/FirebaseService';
@@ -47,6 +47,11 @@ export class DashbordComponent implements OnInit {
   constructor() {
     this.configService = inject(ConfigService);
     this.firebaseService = inject(FirebaseService);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: { target: { innerHeight: any } }) {
+    this.getScreenHeight = event.target.innerHeight;
   }
 
   ngOnInit(): void {

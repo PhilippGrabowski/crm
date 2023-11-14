@@ -34,6 +34,10 @@
   transform: translateY(165px);
   transition: all 0.6s ease;
 
+  &.open {
+    height: 555px !important;
+  }
+
   mat-form-field {
     width: 100%;
   }
@@ -477,6 +481,7 @@
 
     &.open {
       transform: translateY(0px);
+      height: 355px !important;
     }
   }
   .weather-container .weather {
